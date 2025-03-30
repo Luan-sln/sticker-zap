@@ -16,32 +16,32 @@ client.on('ready', () => {
 });
 
 // Mensagens que o cliente autenticado recebe
-client.on('message', async message => {
-    console.log('Mensagem recebida: ', message.body, '\nTem mídia?', message.hasMedia);
-    if (message.hasMedia && message.body.trim().toLowerCase() === 'bot stk') {
-        try {
-            const media = await message.downloadMedia();
-            const buffer = Buffer.from(media.data, 'base64');
+// client.on('message', async message => {
+//     console.log('Mensagem recebida: ', message.body, '\nTem mídia?', message.hasMedia);
+//     if (message.hasMedia && message.body.trim().toLowerCase() === 'bot stk') {
+//         try {
+//             const media = await message.downloadMedia();
+//             const buffer = Buffer.from(media.data, 'base64');
             
-            const stickerBuffer = await sharp(buffer)
-            .resize({
-                width: 512,
-                height: 512,
-                fit: 'inside',
-                withoutEnlargement: true
-            })
-            .toFormat('webp')
-            .toBuffer();
+//             const stickerBuffer = await sharp(buffer)
+//             .resize({
+//                 width: 512,
+//                 height: 512,
+//                 fit: 'inside',
+//                 withoutEnlargement: true
+//             })
+//             .toFormat('webp')
+//             .toBuffer();
             
-            const sticker = new MessageMedia('image/webp', stickerBuffer.toString('base64'));
+//             const sticker = new MessageMedia('image/webp', stickerBuffer.toString('base64'));
             
-            client.sendMessage(message.from, sticker, { sendMediaAsSticker: true });
-        } catch (err) {
-            console.error('Erro ao processar imagem:', err);
-            message.reply('Deu ruim.');
-        }
-    }
-});
+//             client.sendMessage(message.from, sticker, { sendMediaAsSticker: true });
+//         } catch (err) {
+//             console.error('Erro ao processar imagem:', err);
+//             message.reply('Deu ruim.');
+//         }
+//     }
+// });
 
 // Mensagens que o cliente autenticado envia
 // As figurinhas geradas por esse metodo serão enviadas ao proprio numero do cliente autenticado

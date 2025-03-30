@@ -46,7 +46,7 @@ client.on('ready', () => {
 // Mensagens que o cliente autenticado envia
 // As figurinhas geradas por esse metodo serão enviadas ao proprio numero do cliente autenticado
 client.on('message_create', async message => {
-    console.log('Mensagem enviada: ', message.body, '\nTem mídia?', message.hasMedia);
+    console.log('Mensagem enviada: ', message.body, '\nTem mídia?\n', message.hasMedia);
     if (message.fromMe && message.body.trim().toLowerCase() === 'bot stk') {
         if (message.hasMedia) {
             try {

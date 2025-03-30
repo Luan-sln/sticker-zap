@@ -2,6 +2,11 @@ const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const sharp = require('sharp');
 
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+});
+
 const client = new Client({
     authStrategy: new LocalAuth()
 });
@@ -17,23 +22,24 @@ client.on('ready', () => {
 
 // Mensagens que o cliente autenticado recebe
 client.on('message', async message => {
+    console.log('Mensagem recebida: ', message.body, '\nTem mídia?', message.hasMedia);
     if (message.hasMedia && message.body.trim().toLowerCase() === 'bot stk') {
         try {
             const media = await message.downloadMedia();
             const buffer = Buffer.from(media.data, 'base64');
-
+            
             const stickerBuffer = await sharp(buffer)
-                .resize({
-                    width: 512,
-                    height: 512,
-                    fit: 'inside',
-                    withoutEnlargement: true
-                })
-                .toFormat('webp')
-                .toBuffer();
-
+            .resize({
+                width: 512,
+                height: 512,
+                fit: 'inside',
+                withoutEnlargement: true
+            })
+            .toFormat('webp')
+            .toBuffer();
+            
             const sticker = new MessageMedia('image/webp', stickerBuffer.toString('base64'));
-
+            
             client.sendMessage(message.from, sticker, { sendMediaAsSticker: true });
         } catch (err) {
             console.error('Erro ao processar imagem:', err);
@@ -45,8 +51,8 @@ client.on('message', async message => {
 // Mensagens que o cliente autenticado envia
 // As figurinhas geradas por esse metodo serão enviadas ao proprio numero do cliente autenticado
 client.on('message_create', async message => {
+    console.log('Mensagem enviada: ', message.body, '\nTem mídia?', message.hasMedia);
     if (message.fromMe && message.body.trim().toLowerCase() === 'bot stk') {
-        // Se houver mídia na mensagem
         if (message.hasMedia) {
             try {
                 const media = await message.downloadMedia();
